@@ -2,6 +2,7 @@
 var isIsland1=false;
 var isIsland2=false;
 var isDesert=false;
+var isBack=false;
 var myTexture;
 var myPlane;
 
@@ -11,6 +12,10 @@ function OnMouseEnter(){
 	renderer.material.color=Color.red;
 	if (isIsland1==true){
 		myTexture = Resources.LoadAssetAtPath("Assets/Graphics/Textures/MainMenuTexture.png",typeof(Texture));
+		myPlane.renderer.material.mainTexture = myTexture;
+	}
+	if (isIsland2==true){
+		myTexture = Resources.LoadAssetAtPath("Assets/Graphics/Textures/Island2Texture.png",typeof(Texture));
 		myPlane.renderer.material.mainTexture = myTexture;
 	}
 	if (isDesert == true){
@@ -25,13 +30,16 @@ function OnMouseExit(){
 }
 
 function OnMouseUp(){
+	if (isBack==true){
+		Application.LoadLevel(0);
+	}
 	if (isIsland1==true){
 		//Load Island 1
 		Application.LoadLevel(3);
 	}
 	if (isIsland2==true){
 		//Load Island 2
-		
+		Application.LoadLevel(5);
 	}
 	if (isDesert==true){
 		//Load Desert Level
