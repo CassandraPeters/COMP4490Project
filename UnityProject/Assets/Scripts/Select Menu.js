@@ -6,20 +6,24 @@ var isBack=false;
 var myTexture;
 var myPlane;
 
+function Start(){
+	Screen.showCursor = true;
+}
+
 function OnMouseEnter(){
 	myPlane = GameObject.Find("Plane");
 	//change text color
 	renderer.material.color=Color.red;
 	if (isIsland1==true){
-		myTexture = Resources.LoadAssetAtPath("Assets/Graphics/Textures/MainMenuTexture.png",typeof(Texture));
+		myTexture = Resources.Load("MainMenuTexture") as Texture;
 		myPlane.renderer.material.mainTexture = myTexture;
 	}
 	if (isIsland2==true){
-		myTexture = Resources.LoadAssetAtPath("Assets/Graphics/Textures/Island2Texture.png",typeof(Texture));
+		myTexture = Resources.Load("Island2Texture") as Texture;
 		myPlane.renderer.material.mainTexture = myTexture;
 	}
 	if (isDesert == true){
-		myTexture = Resources.LoadAssetAtPath("Assets/Graphics/Textures/DesertImage.png",typeof(Texture));
+		myTexture = Resources.Load("DesertImage") as Texture;
 		myPlane.renderer.material.mainTexture = myTexture;
 	}
 }
