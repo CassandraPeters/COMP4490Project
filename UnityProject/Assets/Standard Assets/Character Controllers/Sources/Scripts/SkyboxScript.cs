@@ -52,8 +52,13 @@ public class SkyboxScript : MonoBehaviour {
 
 		lerpSky.Lerp (currSky, nextSky, Time.deltaTime * 20 / 90);
 		//Oh wait this only lerps through colours so fuck it
-
+		
 		RenderSettings.skybox.SetTexture("_FrontTex", currSky.GetTexture("_FrontTex"));
+		RenderSettings.skybox.SetTexture("_BackTex", currSky.GetTexture("_BackTex"));
+		RenderSettings.skybox.SetTexture("_RightTex", currSky.GetTexture("_RightTex"));
+		RenderSettings.skybox.SetTexture("_LeftTex", currSky.GetTexture("_LeftTex"));
+		RenderSettings.skybox.SetTexture("_UpTex", currSky.GetTexture("_UpTex"));
+		RenderSettings.skybox.SetTexture("_DownTex", currSky.GetTexture("_DownTex"));
 		//(RenderSettings.skybox).Lerp(currSky, nextSky, t);
 	}
 }
