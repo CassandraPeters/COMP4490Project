@@ -19,7 +19,7 @@ function Start ()
 function Update ()
 	{
 	transform.eulerAngles = Vector3.Slerp(transform.eulerAngles, targetRotation, Time.deltaTime * 2);
-    transform.Translate(Vector3(0,0,speed)* Time.deltaTime, Space.Self);
+    transform.Translate(Vector3(0,(speed/2),speed)* Time.deltaTime, Space.Self);
     animation[flyAnimation.name].speed = flyAnimationSpeed;
 	animation.CrossFade(flyAnimation.name, 0.2);
 	}
