@@ -47,14 +47,23 @@ public class SkyboxScript : MonoBehaviour {
 						nextSky = skies[0];
 				}
 			}
+			
+			RenderSettings.skybox.SetTexture("_FrontTex", currSky.GetTexture("_FrontTex"));
+			RenderSettings.skybox.SetTexture("_BackTex", currSky.GetTexture("_BackTex"));
+			RenderSettings.skybox.SetTexture("_RightTex", currSky.GetTexture("_RightTex"));
+			RenderSettings.skybox.SetTexture("_LeftTex", currSky.GetTexture("_LeftTex"));
+			RenderSettings.skybox.SetTexture("_UpTex", currSky.GetTexture("_UpTex"));
+			RenderSettings.skybox.SetTexture("_DownTex", currSky.GetTexture("_DownTex"));
+			
+			RenderSettings.skybox.SetTexture("_FrontTex2", nextSky.GetTexture("_FrontTex"));
+			RenderSettings.skybox.SetTexture("_BackTex2", nextSky.GetTexture("_BackTex"));
+			RenderSettings.skybox.SetTexture("_RightTex2", nextSky.GetTexture("_RightTex"));
+			RenderSettings.skybox.SetTexture("_LeftTex2", nextSky.GetTexture("_LeftTex"));
+			RenderSettings.skybox.SetTexture("_UpTex2", nextSky.GetTexture("_UpTex"));
+			RenderSettings.skybox.SetTexture("_DownTex2", nextSky.GetTexture("_DownTex"));
+			
+			RenderSettings.skybox.SetFloat ("_Blend", (timeOfDay % daySegments) / daySegments);
 		}
-
-		RenderSettings.skybox.SetTexture("_FrontTex", currSky.GetTexture("_FrontTex"));
-		RenderSettings.skybox.SetTexture("_BackTex", currSky.GetTexture("_BackTex"));
-		RenderSettings.skybox.SetTexture("_RightTex", currSky.GetTexture("_RightTex"));
-		RenderSettings.skybox.SetTexture("_LeftTex", currSky.GetTexture("_LeftTex"));
-		RenderSettings.skybox.SetTexture("_UpTex", currSky.GetTexture("_UpTex"));
-		RenderSettings.skybox.SetTexture("_DownTex", currSky.GetTexture("_DownTex"));
 	}
 	/*
 	// Update is called once per frame
