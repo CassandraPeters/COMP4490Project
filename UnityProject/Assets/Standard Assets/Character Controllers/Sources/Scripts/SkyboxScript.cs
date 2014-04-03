@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SkyboxScript : MonoBehaviour {
 	
@@ -14,6 +15,8 @@ public class SkyboxScript : MonoBehaviour {
 	private Material nextSky;
 	private Material lerpSky;
 
+	public List<Material> skies;
+
 
 	// Use this for initialization
 	void Start () {
@@ -22,7 +25,38 @@ public class SkyboxScript : MonoBehaviour {
 		currSky = daySky;
 		nextSky = nightSky;
 	}
-	
+
+	void Update() {
+		float timePassage = Time.deltaTime * timeSpeed;
+		transform.Rotate (timePassage, 0, 0, Space.Self);
+
+		if (skies.Count > 0) {
+			float daySegments = 360f / skies.Count;
+			timeOfDay += timePassage;
+			timeOfDay %= 360f;
+
+			for (int i = 0; i < skies.Count; i++)
+			{
+				if (timeOfDay > daySegments * i && timeOfDay < daySegments * (i+1))
+				{
+					currSky = skies[i];
+
+					if (i+1 < skies.Count)
+						nextSky = skies[i+1];
+					else
+						nextSky = skies[0];
+				}
+			}
+		}
+
+		RenderSettings.skybox.SetTexture("_FrontTex", currSky.GetTexture("_FrontTex"));
+		RenderSettings.skybox.SetTexture("_BackTex", currSky.GetTexture("_BackTex"));
+		RenderSettings.skybox.SetTexture("_RightTex", currSky.GetTexture("_RightTex"));
+		RenderSettings.skybox.SetTexture("_LeftTex", currSky.GetTexture("_LeftTex"));
+		RenderSettings.skybox.SetTexture("_UpTex", currSky.GetTexture("_UpTex"));
+		RenderSettings.skybox.SetTexture("_DownTex", currSky.GetTexture("_DownTex"));
+	}
+	/*
 	// Update is called once per frame
 	void Update () {
 		float timePassage = Time.deltaTime * timeSpeed;
@@ -60,5 +94,5 @@ public class SkyboxScript : MonoBehaviour {
 		RenderSettings.skybox.SetTexture("_UpTex", currSky.GetTexture("_UpTex"));
 		RenderSettings.skybox.SetTexture("_DownTex", currSky.GetTexture("_DownTex"));
 		//(RenderSettings.skybox).Lerp(currSky, nextSky, t);
-	}
+	}*/
 }
