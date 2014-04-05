@@ -6,6 +6,11 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	private Terrain terr;
 	private TerrainData td;
 
+	public int minHeightAvg = 1;
+	public int maxHeightAvg = 10;
+	public int minProtrusions = 5;
+	public int maxProtrusions = 20;
+
 	void averageHeight()
 	{
 
@@ -14,6 +19,62 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	bool checkBetween(int sx, int ex, int i, int sy, int ey, int j)
 	{
 		return (sx <= i && ex >= i && sy <= j && ey >= j);
+	}
+
+	float avgHeight(float[,] heights, int x, int y)
+	{
+		float sum = 0f;
+
+		if (x - 1 >= 0)
+			sum += heights [x - 1, y];
+		if (x + 1 < heights.GetLength (0))
+			sum += heights [x + 1, y];
+		if (y - 1 >= 0)
+			sum += heights [x, y - 1];
+		if (y + 1 < heights.GetLength (1))
+			sum += heights [x, y + 1];
+		if (x - 1 >= 0 && y - 1 >= 0)
+			sum += heights[x-1,y-1];
+		if (x + 1 < heights.GetLength(0) && y - 1 >= 0)
+			sum += heights[x+1,y-1];
+		if (x + 1 < heights.GetLength(0) && y + 1 < heights.GetLength(1))
+			sum += heights[x+1,y+1];
+		if (x - 1 >= 0 && y + 1 < heights.GetLength(1))
+			sum += heights[x-1,y+1];
+
+		return sum / 8;
+	}
+
+	float[,] avgHeightsInRange (float[,] heights, int sx, int sy, int ex, int ey)
+	{
+
+		for (int i = sx; i < ex; i++) {
+			heights[i,sy] = avgHeight(heights,i,sy);
+			heights[i,ey-1] = avgHeight(heights,i,ey-1);
+		}
+		for (int j = sy; j < ey; j++) {
+			heights[sx,j] = avgHeight(heights,sx,j);
+			heights[ex-1,j] = avgHeight(heights,ex-1,j);
+		}
+		int newSX = sx;
+		int newSY = sy;
+		int newEX = ex;
+		int newEY = ey;
+		if (ex - sx > 2)
+		{
+			newSX = sx+1;
+			newEX = ex-1;
+		}
+		if (ey - sy > 2)
+		{
+			newSY = sy+1;
+			newEY = ey-1;
+		}
+
+		if (Mathf.Abs(ex - sx) > 2 || Mathf.Abs(ey - sy) > 2)
+			heights = avgHeightsInRange(heights,newSX,newSY,newEX,newEY);
+
+		return heights;
 	}
 
 	// Use this for initialization
@@ -30,7 +91,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 		heights = td.GetHeights (0, 0, w, h);
 		int tendency;
 
-		int numProtrusions = r.Next (4, 15);
+		int numProtrusions = r.Next (minProtrusions, maxProtrusions);
 
 		float baseHeight = 0.5f;
 		float startx = r.Next (99);
@@ -39,25 +100,32 @@ public class RandomTerrainManipulator : MonoBehaviour {
 		float mult = ((float)r.Next (80, 300))/100f;
 
 		int sx, sy, ex, ey;
+		int maxProtSize = 200;
+		int minProtSize = 10;
 
 
 		for (int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				heights[i,j] = Mathf.PerlinNoise((float)(i + startx) / 80f, (float)(j + starty) / 80f)/3f + 0.2f;
+				heights[i,j] = Mathf.PerlinNoise((float)(i + startx) / 80f, (float)(j + starty) / 80f)/3f;
 			}
 		}
 		
 		for (int k = 0; k < numProtrusions; k++) {
-			sx = r.Next (0, w - 3);
-			sy = r.Next (0, h - 3);
-			ex = r.Next (sx, w);
-			ey = r.Next (sy, h);
+			sx = r.Next (minProtSize + 1, w - maxProtSize) - minProtSize;
+			sy = r.Next (minProtSize + 1, h - maxProtSize) - minProtSize;
+			ex = r.Next (sx, sx+maxProtSize-1);
+			ey = r.Next (sy, sy+maxProtSize-1);
 
 			mult = ((float)r.Next (80, 300))/100f;
 			for (int i = sx; i < ex; i++) {
 				for (int j = sy; j < ey; j++) {
 					heights[i,j] *= mult;
 				}
+			}
+			int numPasses = r.Next (minHeightAvg, maxHeightAvg);
+			
+			for (int i = 0; i < numPasses; i++) {
+				avgHeightsInRange(heights,sx,sy,ex,ey);
 			}
 		}
 
