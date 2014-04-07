@@ -9,7 +9,13 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	public int minHeightAvg = 1;
 	public int maxHeightAvg = 10;
 	public int minProtrusions = 5;
-	public int maxProtrusions = 20;
+	public int maxProtrusions = 5;
+	public bool bisect = false;
+	public int minBisect = 4;
+	public int maxBisect = 20;
+	public bool circle = true;
+	public int minRadius = 10;
+	public int maxRadius = 500;
 
 	void averageHeight()
 	{
@@ -19,6 +25,42 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	bool checkBetween(int sx, int ex, int i, int sy, int ey, int j)
 	{
 		return (sx <= i && ex >= i && sy <= j && ey >= j);
+	}
+
+	void circleProtrusion(float[,] heights)
+	{
+		int numProt = r.Next (minProtrusions, maxProtrusions);
+		float minHeight = 1f;
+		float maxHeight = 2.5f;
+		int radius;
+		int x, y;
+		Vector2 center, dist;
+		float height = minHeight;
+		float mag;
+		for (int k = 0; k < numProt; k++) {
+			x = r.Next(0, heights.GetLength(0));
+			y = r.Next(0, heights.GetLength(1));
+			center = new Vector2(x,y);
+			radius = r.Next(minRadius, maxRadius);
+			for (int i = 0; i < heights.GetLength(0); i++)
+			{
+				for (int j = 0; j < heights.GetLength(1); j++)
+				{
+					dist = new Vector2(i,j);
+					mag = (dist - center).magnitude;
+
+					if (mag > radius)
+						height = minHeight;
+					else{
+						height = 2f;
+						height = -(mag / ((float)radius) - 1f);
+						height = (height * (maxHeight - minHeight)) + minHeight;
+						//height = ((((float)radius) / mag) * (maxHeight - minHeight));// + minHeight;
+					}
+					heights[i,j] *= height;
+				}
+			}
+		}
 	}
 
 	float avgHeight(float[,] heights, int x, int y)
@@ -77,6 +119,48 @@ public class RandomTerrainManipulator : MonoBehaviour {
 		return heights;
 	}
 
+	float[,] bisectTerrain (float[,] heights, int sx, int sy, int ex, int ey, bool dir, int numBisect)
+	{
+		float mult = ((float)r.Next (70, 160)) / 100f;
+		for (int i = sx; i < ex; i++) {
+			for (int j = sy; j < ey; j++) {
+				heights [i, j] *= mult;
+			}
+		}
+		int numPasses = r.Next (minHeightAvg, maxHeightAvg);
+		
+		for (int i = 0; i < numPasses; i++) {
+			avgHeightsInRange (heights, sx, sy, ex, ey);
+		}
+
+		if (numBisect > 0) {
+			int newEX = 0;
+			int newEY = 0;
+			int newSX2 = 0;
+			int newSY2 = 0;
+
+			if (dir)
+			{
+				newEX = r.Next(sx,ex);
+				newSX2 = newEX;
+				newEY = ey;
+				newSY2 = sy;
+			}
+			else
+			{
+				newEY = r.Next(sy,ey);
+				newSY2 = newEY;
+				newEX = ex;
+				newSX2 = sx;
+			}
+			
+			heights = bisectTerrain(heights, sx, sy, newEX, newEY, !dir, numBisect - 1);
+			heights = bisectTerrain(heights, newSX2, newSY2, ex, ey, !dir, numBisect - 1);
+		}
+
+		return heights;
+	}
+	
 	// Use this for initialization
 	void Start () {
 		r = new System.Random ();
@@ -109,23 +193,30 @@ public class RandomTerrainManipulator : MonoBehaviour {
 				heights[i,j] = Mathf.PerlinNoise((float)(i + startx) / 80f, (float)(j + starty) / 80f)/3f;
 			}
 		}
-		
-		for (int k = 0; k < numProtrusions; k++) {
-			sx = r.Next (minProtSize + 1, w - maxProtSize) - minProtSize;
-			sy = r.Next (minProtSize + 1, h - maxProtSize) - minProtSize;
-			ex = r.Next (sx, sx+maxProtSize-1);
-			ey = r.Next (sy, sy+maxProtSize-1);
 
-			mult = ((float)r.Next (80, 300))/100f;
-			for (int i = sx; i < ex; i++) {
-				for (int j = sy; j < ey; j++) {
-					heights[i,j] *= mult;
+		if (bisect) {
+			heights = bisectTerrain (heights, 0, 0, w, h, true, r.Next (minBisect, maxBisect));
+		} else if (circle) {
+			circleProtrusion(heights);
+		}
+		else if (!bisect) {
+			for (int k = 0; k < numProtrusions; k++) {
+				sx = r.Next (minProtSize + 1, w - maxProtSize) - minProtSize;
+				sy = r.Next (minProtSize + 1, h - maxProtSize) - minProtSize;
+				ex = r.Next (sx, sx + maxProtSize - 1);
+				ey = r.Next (sy, sy + maxProtSize - 1);
+				
+				mult = ((float)r.Next (80, 300)) / 100f;
+				for (int i = sx; i < ex; i++) {
+					for (int j = sy; j < ey; j++) {
+						heights [i, j] *= mult;
+					}
 				}
-			}
-			int numPasses = r.Next (minHeightAvg, maxHeightAvg);
-			
-			for (int i = 0; i < numPasses; i++) {
-				avgHeightsInRange(heights,sx,sy,ex,ey);
+				int numPasses = r.Next (minHeightAvg, maxHeightAvg);
+				
+				for (int i = 0; i < numPasses; i++) {
+					avgHeightsInRange (heights, sx, sy, ex, ey);
+				}
 			}
 		}
 
