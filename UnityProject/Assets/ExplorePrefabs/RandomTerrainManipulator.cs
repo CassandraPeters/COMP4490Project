@@ -31,7 +31,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	{
 		int numProt = r.Next (minProtrusions, maxProtrusions);
 		float minHeight = 1f;
-		float maxHeight = 2.5f;
+		float maxHeight = 2f;
 		int radius;
 		int x, y;
 		Vector2 center, dist;
@@ -52,12 +52,19 @@ public class RandomTerrainManipulator : MonoBehaviour {
 					if (mag > radius)
 						height = minHeight;
 					else{
-						height = 2f;
+						//Set the outer edge of the circle to be 0 and the center to be 1
 						height = -(mag / ((float)radius) - 1f);
+
+						//Set up height for 
+						height *= Mathf.PI;
+						height -= Mathf.PI / 2;
+						height = (Mathf.Sin(height) + 1) / 2;
+
 						height = (height * (maxHeight - minHeight)) + minHeight;
 						//height = ((((float)radius) / mag) * (maxHeight - minHeight));// + minHeight;
 					}
 					heights[i,j] *= height;
+
 				}
 			}
 		}
