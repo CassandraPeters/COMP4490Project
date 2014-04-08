@@ -408,13 +408,21 @@ public class RandomTerrainManipulator : MonoBehaviour {
 
 		for (int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				heights[i,j] = 0.3f;
 				heights[i,j] = Mathf.PerlinNoise((float)(i + startx) / 80f, (float)(j + starty) / 80f)/3f ;
 			}
 		}
 
 		if (isIsland) {
 
+		}
+
+		if (islandChoice == 1) {
+			maxHeight = minHeight + ((maxHeight - minHeight) / 2);
+			minProtrusions /= 2;
+			maxProtrusions /= 2;
+			minDipRadius /= 2;
+			maxDipRadius /= 2;
+			maxDipHeight = minDipHeight + ((maxDipHeight - minDipHeight) / 2);
 		}
 
 		if (bisect) {
