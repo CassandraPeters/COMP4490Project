@@ -2,6 +2,7 @@
 var isIsland1=false;
 var isIsland2=false;
 var isDesert=false;
+var isLava = false;
 var isBack=false;
 var myTexture;
 var myPlane;
@@ -26,6 +27,10 @@ function OnMouseEnter(){
 		myTexture = Resources.Load("DesertImage") as Texture;
 		myPlane.renderer.material.mainTexture = myTexture;
 	}
+	if (isLava == true){
+		myTexture = Resources.Load("LavaWorld") as Texture;
+		myPlane.renderer.material.mainTexture = myTexture;
+	}
 }
 
 function OnMouseExit(){
@@ -48,6 +53,9 @@ function OnMouseUp(){
 	if (isDesert==true){
 		//Load Desert Level
 		Application.LoadLevel(4);
+	}
+	if (isLava==true){
+		Application.LoadLevel(7);
 	}
 	if (isQuit==true) {
 		//quit the game
