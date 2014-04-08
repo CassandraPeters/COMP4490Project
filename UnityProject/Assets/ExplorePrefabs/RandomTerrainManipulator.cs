@@ -6,6 +6,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	private Terrain terr;
 	private TerrainData td;
 
+	public bool isIsland = true;
 	public int minHeightAvg = 1;
 	public int maxHeightAvg = 10;
 	public int minProtrusions = 5;
@@ -14,8 +15,17 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	public int minBisect = 4;
 	public int maxBisect = 20;
 	public bool circle = true;
-	public int minRadius = 10;
-	public int maxRadius = 500;
+	public int minRadius = 200;
+	public int maxRadius = 200;
+	public float minHeight = 1f;
+	public float maxHeight = 3f;
+	public int minDips = 2;
+	public int maxDips = 5;
+	public int minDipRadius = 200;
+	public int maxDipRadius = 200;
+	public float minDipHeight = 1f;
+	public float maxDipHeight = 3f;
+
 
 	void averageHeight()
 	{
@@ -27,11 +37,51 @@ public class RandomTerrainManipulator : MonoBehaviour {
 		return (sx <= i && ex >= i && sy <= j && ey >= j);
 	}
 
+	void circleDips(float[,] heights)
+	{
+		int numProt = r.Next (minDips, maxDips);
+		int radius;
+		int x, y;
+		Vector2 center, dist;
+		float height = minHeight;
+		float mag;
+		for (int k = 0; k < numProt; k++) {
+			x = r.Next(0, heights.GetLength(0));
+			y = r.Next(0, heights.GetLength(1));
+			center = new Vector2(x,y);
+			radius = r.Next(minDipRadius, maxDipRadius);
+			//radius = 200;
+			for (int i = 0; i < heights.GetLength(0); i++)
+			{
+				for (int j = 0; j < heights.GetLength(1); j++)
+				{
+					dist = new Vector2(i,j);
+					mag = (dist - center).magnitude;
+					
+					if (mag > radius)
+						height = 1f;
+					else{
+						//Set the outer edge of the circle to be 0 and the center to be 1
+						height = -(mag / ((float)radius) - 1f);
+						
+						//Set up height for 
+						height *= Mathf.PI;
+						height -= Mathf.PI / 2;
+						height = (Mathf.Sin(height) + 1) / 2;
+						
+						height = (height * (maxDipHeight - minDipHeight)) + minDipHeight;
+						//height = ((((float)radius) / mag) * (maxHeight - minHeight));// + minHeight;
+					}
+					heights[i,j] /= height;
+					
+				}
+			}
+		}
+	}
+
 	void circleProtrusion(float[,] heights)
 	{
 		int numProt = r.Next (minProtrusions, maxProtrusions);
-		float minHeight = 1f;
-		float maxHeight = 2f;
 		int radius;
 		int x, y;
 		Vector2 center, dist;
@@ -42,6 +92,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 			y = r.Next(0, heights.GetLength(1));
 			center = new Vector2(x,y);
 			radius = r.Next(minRadius, maxRadius);
+			//radius = 200;
 			for (int i = 0; i < heights.GetLength(0); i++)
 			{
 				for (int j = 0; j < heights.GetLength(1); j++)
@@ -50,7 +101,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 					mag = (dist - center).magnitude;
 
 					if (mag > radius)
-						height = minHeight;
+						height = 1f;
 					else{
 						//Set the outer edge of the circle to be 0 and the center to be 1
 						height = -(mag / ((float)radius) - 1f);
@@ -184,7 +235,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 
 		int numProtrusions = r.Next (minProtrusions, maxProtrusions);
 
-		float baseHeight = 0.5f;
+		float baseHeight = 0.3f;
 		float startx = r.Next (99);
 		float starty = r.Next (99);
 
@@ -197,8 +248,13 @@ public class RandomTerrainManipulator : MonoBehaviour {
 
 		for (int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				heights[i,j] = Mathf.PerlinNoise((float)(i + startx) / 80f, (float)(j + starty) / 80f)/3f;
+				heights[i,j] = 0.3f;
+				heights[i,j] = Mathf.PerlinNoise((float)(i + startx) / 80f, (float)(j + starty) / 80f)/3f ;
 			}
+		}
+
+		if (isIsland) {
+
 		}
 
 		if (bisect) {
@@ -226,6 +282,8 @@ public class RandomTerrainManipulator : MonoBehaviour {
 				}
 			}
 		}
+		
+		circleDips (heights);
 
 		td.SetHeights (0, 0, heights);
 
