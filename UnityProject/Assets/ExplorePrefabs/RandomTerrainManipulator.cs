@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class RandomTerrainManipulator : MonoBehaviour {
 	private System.Random r;
@@ -26,10 +27,90 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	public float minDipHeight = 1f;
 	public float maxDipHeight = 3f;
 
-
-	void averageHeight()
+	void terrainIsland()
 	{
+		float maxHeight = 0;
+		// Get the attached terrain component
+		Terrain terrain = GetComponent<Terrain>();
+		
+		// Get a reference to the terrain data
+		TerrainData terrainData = terrain.terrainData;
+		
+		// Splatmap data is stored internally as a 3d array of floats, so declare a new empty array ready for your custom splatmap data:
+		float[, ,] splatmapData = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, terrainData.alphamapLayers];
+		
+		for (int y = 0; y < terrainData.alphamapHeight; y++) 
+		{
+			for (int x = 0; x < terrainData.alphamapWidth; x++) 
+			{
+				// Normalise x/y coordinates to range 0-1 
+				float y_01 = (float)y/(float)terrainData.alphamapHeight;
+				float x_01 = (float)x/(float)terrainData.alphamapWidth;
+				
+				float height = terrainData.GetHeight (Mathf.RoundToInt (y_01 * terrainData.heightmapHeight), Mathf.RoundToInt (x_01 * terrainData.heightmapWidth));
+				if (height > maxHeight) maxHeight = height;
+			}
+		}
+		for (int y = 0; y < terrainData.alphamapHeight; y++)
+		{
+			for (int x = 0; x < terrainData.alphamapWidth; x++)
+			{
+				// Normalise x/y coordinates to range 0-1 
+				float y_01 = (float)y/(float)terrainData.alphamapHeight;
+				float x_01 = (float)x/(float)terrainData.alphamapWidth;
+				
+				// Sample the height at this location (note GetHeight expects int coordinates corresponding to locations in the heightmap array)
+				float height = terrainData.GetHeight(Mathf.RoundToInt(y_01 * terrainData.heightmapHeight),Mathf.RoundToInt(x_01 * terrainData.heightmapWidth) );
+				
+				// Calculate the normal of the terrain (note this is in normalised coordinates relative to the overall terrain dimensions)
+				Vector3 normal = terrainData.GetInterpolatedNormal(y_01,x_01);
+				
+				// Calculate the steepness of the terrain
+				float steepness = terrainData.GetSteepness(y_01,x_01);
+				
+				// Setup an array to record the mix of texture weights at this point
+				float[] splatWeights = new float[terrainData.alphamapLayers];
+				
+				// CHANGE THE RULES BELOW TO SET THE WEIGHTS OF EACH TEXTURE ON WHATEVER RULES YOU WANT
+				
+				// Texture[0] has constant influence
+				splatWeights[0] = 0.5f;
+				
+				// Texture[1] is stronger at lower altitudes
+				splatWeights[1] = Mathf.Clamp01((terrainData.heightmapHeight - height));
+				
+				// Texture[2] stronger on flatter terrain
+				splatWeights[2] = 1.0f - Mathf.Clamp01(steepness*steepness/(terrainData.heightmapHeight/5.0f));
+				
+				// Texture[3] increases with height but only on surfaces facing positive Y axis
+				if (height > maxHeight*0.5f){
+					splatWeights[3] = height;
+				} else {
+					splatWeights[0] = 0;
+				}
+				
+				// Sum of all textures weights must add to 1, so calculate normalization factor from sum of weights
+				float z = splatWeights.Sum();
+				
+				// Loop through each terrain texture
+				for(int i = 0; i<terrainData.alphamapLayers; i++){
+					
+					// Normalize so that sum of all texture weights = 1
+					splatWeights[i] /= z;
+					
+					// Assign this point to the splatmap array
+					splatmapData[x, y, i] = splatWeights[i];
+				}
+			}
+		}
+		
+		// Finally assign the new splatmap to the terrainData:
+		terrainData.SetAlphamaps(0, 0, splatmapData);
+	}
 
+	void assignSplatMaps()
+	{
+		terrainIsland ();
 	}
 
 	bool checkBetween(int sx, int ex, int i, int sy, int ey, int j)
@@ -287,73 +368,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 
 		td.SetHeights (0, 0, heights);
 
-		/*
-		for (int i = 0; i < w; i++) {
-			for (int j = 0; j < h; j++) {
-				heights[i,j] = baseHeight;
-			}
-		}
-		td.SetHeights (0, 0, heights);
-		
-		for (int i = 0; i < w; i++) {
-			for (int j = 0; j < h; j++) {
-				left = baseHeight;
-				up = baseHeight;
-				min = baseHeight;
-				max = baseHeight;
-				tendency = 0;
-				if (i - 1 >= 0)
-				{
-					left = heights[i-1,j];
-					if (left < baseHeight)
-						tendency--;
-					else
-						tendency++;
-				}
-				if (j - 1 >= 0)
-				{
-					up = heights[i, j-1];
-					if (up < baseHeight)
-						tendency--;
-					else
-						tendency++;
-				}
-				
-				if (left > up)
-				{
-					max = left;
-					min = up;
-				}
-				else
-				{
-					max = up;
-					min = left;
-				}
-				
-				if (max - min <= 2*diff)
-				{
-					min -=2*diff;
-					max += 2*diff;
-				}
-				
-				min -= diff;
-				max += diff;
-				
-				if (tendency < 0)
-				{
-					min -= diff;
-				}
-				else if (tendency > 0)
-				{
-					max += diff;
-				}
-				
-				heights[i,j] = getHeight(min, max);
-			}
-		}
-		td.SetHeights (0, 0, heights);
-
-		int jump;*/
+		assignSplatMaps ();
 	}
 
 	private float getHeight(float min, float max)

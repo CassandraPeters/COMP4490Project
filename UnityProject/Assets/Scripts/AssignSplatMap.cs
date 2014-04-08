@@ -3,8 +3,8 @@ using System.Collections;
 using System.Linq; // used for Sum of array
 
 public class AssignSplatMap : MonoBehaviour {
-	
-	void Start () {
+	void terrainIsland(){
+		float maxHeight = 0;
 		// Get the attached terrain component
 		Terrain terrain = GetComponent<Terrain>();
 		
@@ -13,7 +13,19 @@ public class AssignSplatMap : MonoBehaviour {
 		
 		// Splatmap data is stored internally as a 3d array of floats, so declare a new empty array ready for your custom splatmap data:
 		float[, ,] splatmapData = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, terrainData.alphamapLayers];
-		
+
+		for (int y = 0; y < terrainData.alphamapHeight; y++) 
+		{
+			for (int x = 0; x < terrainData.alphamapWidth; x++) 
+			{
+				// Normalise x/y coordinates to range 0-1 
+				float y_01 = (float)y/(float)terrainData.alphamapHeight;
+				float x_01 = (float)x/(float)terrainData.alphamapWidth;
+
+				float height = terrainData.GetHeight (Mathf.RoundToInt (y_01 * terrainData.heightmapHeight), Mathf.RoundToInt (x_01 * terrainData.heightmapWidth));
+				if (height > maxHeight) maxHeight = height;
+			}
+		}
 		for (int y = 0; y < terrainData.alphamapHeight; y++)
 		{
 			for (int x = 0; x < terrainData.alphamapWidth; x++)
@@ -43,12 +55,14 @@ public class AssignSplatMap : MonoBehaviour {
 				splatWeights[1] = Mathf.Clamp01((terrainData.heightmapHeight - height));
 				
 				// Texture[2] stronger on flatter terrain
-				// Note "steepness" is unbounded, so we "normalise" it by dividing by the extent of heightmap height and scale factor
-				// Subtract result from 1.0 to give greater weighting to flat surfaces
-				splatWeights[2] = Mathf.Clamp01 ((terrainData.heightmapHeight - (height-0.5f)*2));
+				splatWeights[2] = 1.0f - Mathf.Clamp01(steepness*steepness/(terrainData.heightmapHeight/5.0f));
 				
-				// Texture[3] increases with height but only on surfaces facing positive Z axis 
-				splatWeights[3] = Mathf.Clamp01((terrainData.heightmapHeight - height*2));
+				// Texture[3] increases with height but only on surfaces facing positive Y axis
+				if (height > maxHeight*0.5f){
+					splatWeights[3] = height;
+				} else {
+					splatWeights[0] = 0;
+				}
 				
 				// Sum of all textures weights must add to 1, so calculate normalization factor from sum of weights
 				float z = splatWeights.Sum();
@@ -67,5 +81,9 @@ public class AssignSplatMap : MonoBehaviour {
 		
 		// Finally assign the new splatmap to the terrainData:
 		terrainData.SetAlphamaps(0, 0, splatmapData);
+
+		}
+	void Start () {
+		terrainIsland ();
 	}
 }
