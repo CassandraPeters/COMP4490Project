@@ -15,6 +15,8 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	public bool bisect = false;
 	public int minBisect = 4;
 	public int maxBisect = 20;
+
+	public int isleRadius = 300;
 	public bool circle = true;
 	public int minRadius = 200;
 	public int maxRadius = 200;
@@ -412,8 +414,37 @@ public class RandomTerrainManipulator : MonoBehaviour {
 			}
 		}
 
-		if (isIsland) {
-
+		if (islandChoice == 0) {
+			int x, y;
+			Vector2 center, dist;
+			float height = minHeight;
+			float mag;
+			center = new Vector2(w/2,h/2);
+			for (int i = 0; i < w; i++)
+			{
+				for (int j = 0; j < h; j++)
+				{
+					dist = new Vector2(i,j);
+					mag = (dist - center).magnitude;
+					
+					if (mag > isleRadius)
+						height = 0f;
+					else{
+						//Set the outer edge of the circle to be 0 and the center to be 1
+						height = -(mag / ((float)isleRadius) - 1f);
+						
+						//Set up height for 
+						height *= Mathf.PI;
+						height -= Mathf.PI / 2;
+						height = (Mathf.Sin(height) + 1) / 2;
+						
+						//height = (height * (1f - 0f)) + 0f;
+						//height = ((((float)radius) / mag) * (maxHeight - minHeight));// + minHeight;
+					}
+					heights[i,j] *= height;
+					
+				}
+			}
 		}
 
 		if (islandChoice == 1) {
