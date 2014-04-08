@@ -34,7 +34,63 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	public int minObjects = 100;
 	public int maxObjects = 300;
 
-	void randomizeObjects(){
+	void randomizeObjectsDesert() {
+		int numObjects = Random.Range (minObjects/10, maxObjects/10);
+		
+		Terrain terrain = GetComponent<Terrain>();
+		
+		// Get a reference to the terrain data
+		TerrainData terrainData = terrain.terrainData;
+		
+		// Splatmap data is stored internally as a 3d array of floats, so declare a new empty array ready for your custom splatmap data:
+		float[, ,] splatmapData = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, terrainData.alphamapLayers];
+		Vector3 size = terrainData.size;
+		Vector3 newPos = new Vector3 ();
+		
+		GameObject rock1 = GameObject.Find ("ToonRock1");
+		GameObject rock2 = GameObject.Find ("ToonRock2");
+		
+		for (int i = 0; i < numObjects; i++) {
+			bool keepGoing = true;
+			
+			newPos = terrain.transform.position;
+			float w = Random.Range(0.0f, size.x);
+			float h = Random.Range (0.0f, size.z);
+			newPos.x += w;
+			newPos.y += size.y + 10.0f;
+			newPos.z += h;
+			
+			float y_01 = newPos.z/(float)terrainData.alphamapHeight;
+			float x_01 = newPos.x/(float)terrainData.alphamapWidth;
+			
+			float height = terrainData.GetHeight (Mathf.RoundToInt (y_01 * terrainData.heightmapHeight), Mathf.RoundToInt (x_01 * terrainData.heightmapWidth));
+			
+			RaycastHit hit;
+			float yoffset = 0;
+			if(Physics.Raycast(newPos, -Vector3.up, out hit)){
+				if (hit.collider.tag == "Rock"){
+					i--;
+					keepGoing = false;
+				} else {
+					yoffset = hit.distance;
+				}
+			}
+			if (keepGoing){
+				int objectChoice = r.Next () % 2;
+				float scale = Random.Range (0.5f, 1.5f);
+
+				newPos.y -= (yoffset-0.5f);
+				if (objectChoice == 0){
+					rock1.GetComponent<Transform>().localScale *= scale;
+					Instantiate(rock1, newPos, rock1.transform.rotation);
+				} else {
+					rock2.GetComponent<Transform>().localScale *= scale;
+					Instantiate(rock2, newPos, rock2.transform.rotation);
+				}
+			}
+		}
+	}
+	void randomizeObjectsIsland(){
 		int numObjects = Random.Range (minObjects, maxObjects);
 
 		Terrain terrain = GetComponent<Terrain>();
@@ -167,7 +223,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 		
 		// Finally assign the new splatmap to the terrainData:
 		terrainData.SetAlphamaps(0, 0, splatmapData);
-		randomizeObjects ();
+		randomizeObjectsIsland ();
 	}
 
 	void desertIsland()
@@ -241,6 +297,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 		
 		// Finally assign the new splatmap to the terrainData:
 		terrainData.SetAlphamaps(0, 0, splatmapData);
+		randomizeObjectsDesert ();
 	}
 	void assignSplatMaps()
 	{
