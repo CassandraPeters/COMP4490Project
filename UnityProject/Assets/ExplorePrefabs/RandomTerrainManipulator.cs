@@ -48,6 +48,8 @@ public class RandomTerrainManipulator : MonoBehaviour {
 		Vector3 newPos = new Vector3 ();
 
 		GameObject tree = GameObject.Find ("ToonTree");
+		GameObject bird = GameObject.Find ("birdrandom");
+
 		for (int i = 0; i < numObjects; i++) {
 			bool keepGoing = true;
 
@@ -66,7 +68,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 			RaycastHit hit;
 			float yoffset = 0;
 			if(Physics.Raycast(newPos, -Vector3.up, out hit)){
-				if (hit.collider.tag == "Water"){
+				if (hit.collider.tag == "Water" || hit.collider.tag == "Bird"){
 					i--;
 					keepGoing = false;
 				} else {
@@ -74,8 +76,14 @@ public class RandomTerrainManipulator : MonoBehaviour {
 				}
 			}
 			if (keepGoing){
-				newPos.y -= (yoffset);
-				Instantiate(tree, newPos, tree.transform.rotation);
+				int objectChoice = r.Next () % 2;
+				if (objectChoice == 0){
+					newPos.y -= (yoffset);
+					Instantiate(tree, newPos, tree.transform.rotation);
+				} else {
+					newPos.y -= (yoffset-0.4f);
+					Instantiate(bird, newPos, bird.transform.rotation);
+				}
 			}
 		}
 	}
