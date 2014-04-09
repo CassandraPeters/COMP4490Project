@@ -9,12 +9,11 @@ public class RandomTerrainManipulator : MonoBehaviour {
 	private TerrainData td;
 
 	public bool forceIsland = true;
-	public int minHeightAvg = 1;
-	public int maxHeightAvg = 10;
 	public int minProtrusions = 5;
 	public int maxProtrusions = 5;
 
-	public int isleRadius = 300;
+	public int isleMinRadius = 250;
+	public int isleMaxRadius = 300;
 	public int minRadius = 200;
 	public int maxRadius = 200;
 	public float minHeight = 1f;
@@ -335,6 +334,7 @@ public class RandomTerrainManipulator : MonoBehaviour {
 			Vector2 center, dist;
 			float height = minHeight;
 			float mag;
+			int isleRadius = r.Next(isleMinRadius, isleMaxRadius);
 			center = new Vector2(w/2,h/2);
 			for (int i = 0; i < w; i++)
 			{

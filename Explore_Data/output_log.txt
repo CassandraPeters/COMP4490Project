@@ -1,0 +1,128 @@
+Initialize engine version: 4.3.0f4 (e01000627d60)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [nvd3dum.dll 9.18.13.1422]
+    Renderer: NVIDIA GeForce GTX 650 Ti 
+    Vendor:   NVIDIA
+    VRAM:     1994 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=0 INTZ=1 RAWZ=0 NULL=1 RESZ=0 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\Assembly-UnityScript-firstpass.dll (this message is harmless)
+Loading C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\Assembly-UnityScript-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\Assembly-UnityScript.dll (this message is harmless)
+Loading C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\Assembly-UnityScript.dll into Unity Child Domain
+- Completed reload, in  0.061 seconds
+desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 0.456414 ms
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 19 unused Assets to reduce memory usage. Loaded Objects now: 280.
+Total: 1.096393 ms (FindLiveObjects: 0.019322 ms CreateObjectMapping: 0.014325 ms MarkObjects: 0.079955 ms  DeleteObjects: 0.389451 ms)
+
+Platform assembly: C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\Boo.Lang.dll (this message is harmless)
+UnloadTime: 43.887051 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 76 unused Assets to reduce memory usage. Loaded Objects now: 165.
+Total: 3.132266 ms (FindLiveObjects: 0.014658 ms CreateObjectMapping: 0.020322 ms MarkObjects: 0.226541 ms  DeleteObjects: 2.069521 ms)
+
+UnloadTime: 0.439090 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 188.
+Total: 0.897503 ms (FindLiveObjects: 0.013659 ms CreateObjectMapping: 0.018989 ms MarkObjects: 0.086618 ms  DeleteObjects: 0.020322 ms)
+
+Platform assembly: C:\Users\Giygas\Documents\GitHub\COMP4490Project\Explore_Data\Managed\UnityScript.Lang.dll (this message is harmless)
+The tree ToonTree must use the Nature/Soft Occlusion shader. Otherwise billboarding/lighting will not work correctly.
+ 
+(Filename:  Line: 79)
+
+UnloadTime: 0.350472 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 16 unused Assets to reduce memory usage. Loaded Objects now: 498.
+Total: 0.628318 ms (FindLiveObjects: 0.017990 ms CreateObjectMapping: 0.011327 ms MarkObjects: 0.102276 ms  DeleteObjects: 0.112271 ms)
+
+UnloadTime: 5.374692 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 78 unused Assets to reduce memory usage. Loaded Objects now: 202.
+Total: 2.642537 ms (FindLiveObjects: 0.022987 ms CreateObjectMapping: 0.021987 ms MarkObjects: 0.125597 ms  DeleteObjects: 1.640092 ms)
+
+The tree ToonTree must use the Nature/Soft Occlusion shader. Otherwise billboarding/lighting will not work correctly.
+ 
+(Filename:  Line: 79)
+
+UnloadTime: 0.376125 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 17 unused Assets to reduce memory usage. Loaded Objects now: 383.
+Total: 0.770906 ms (FindLiveObjects: 0.015324 ms CreateObjectMapping: 0.013992 ms MarkObjects: 0.103942 ms  DeleteObjects: 0.178234 ms)
+
+UnloadTime: 1.116715 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 72 unused Assets to reduce memory usage. Loaded Objects now: 208.
+Total: 2.579572 ms (FindLiveObjects: 0.018989 ms CreateObjectMapping: 0.022320 ms MarkObjects: 0.125597 ms  DeleteObjects: 1.597782 ms)
+
+UnloadTime: 0.499723 ms
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 11 unused Assets to reduce memory usage. Loaded Objects now: 197.
+Total: 1.162689 ms (FindLiveObjects: 0.014658 ms CreateObjectMapping: 0.020988 ms MarkObjects: 0.125264 ms  DeleteObjects: 0.234870 ms)
+
+The tree ToonTree must use the Nature/Soft Occlusion shader. Otherwise billboarding/lighting will not work correctly.
+ 
+(Filename:  Line: 79)
+
+UnloadTime: 0.356802 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 19 unused Assets to reduce memory usage. Loaded Objects now: 227.
+Total: 0.636314 ms (FindLiveObjects: 0.009661 ms CreateObjectMapping: 0.011993 ms MarkObjects: 0.087618 ms  DeleteObjects: 0.131260 ms)
+
+UnloadTime: 0.813882 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 62 unused Assets to reduce memory usage. Loaded Objects now: 211.
+Total: 1.426877 ms (FindLiveObjects: 0.009994 ms CreateObjectMapping: 0.011660 ms MarkObjects: 0.084952 ms  DeleteObjects: 0.893172 ms)
+
+The tree ToonRock1 must use the Nature/Soft Occlusion shader. Otherwise billboarding/lighting will not work correctly.
+ 
+(Filename:  Line: 79)
+
+The tree ToonRock2 must use the Nature/Soft Occlusion shader. Otherwise billboarding/lighting will not work correctly.
+ 
+(Filename:  Line: 79)
+
+The tree ToonRock3 must use the Nature/Soft Occlusion shader. Otherwise billboarding/lighting will not work correctly.
+ 
+(Filename:  Line: 79)
+
+UnloadTime: 0.516380 ms
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 24 unused Assets to reduce memory usage. Loaded Objects now: 599.
+Total: 1.418215 ms (FindLiveObjects: 0.040977 ms CreateObjectMapping: 0.026651 ms MarkObjects: 0.209883 ms  DeleteObjects: 0.334481 ms)
+
+UnloadTime: 3.313499 ms
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 78 unused Assets to reduce memory usage. Loaded Objects now: 215.
+Total: 2.678517 ms (FindLiveObjects: 0.019322 ms CreateObjectMapping: 0.024653 ms MarkObjects: 0.135591 ms  DeleteObjects: 1.643423 ms)
+
+UnloadTime: 0.532705 ms
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
+
+Unloading 13 unused Assets to reduce memory usage. Loaded Objects now: 182.
+Total: 1.053417 ms (FindLiveObjects: 0.013992 ms CreateObjectMapping: 0.023320 ms MarkObjects: 0.124264 ms  DeleteObjects: 0.105275 ms)
+
