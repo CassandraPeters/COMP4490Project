@@ -58,13 +58,13 @@ namespace AssemblyCSharp
 							//Set the outer edge of the circle to be 0 and the center to be 1
 							height = -(mag / ((float)prot.radius) - 1f);
 							
-							//Set up height for 
+							//Set up height to be on a sine curve between 0 and 1
 							height *= Mathf.PI;
 							height -= Mathf.PI / 2;
 							height = (Mathf.Sin(height) + 1) / 2;
-							
+
+							//set height betweeen the max and minimum height values
 							height = (height * (prot.maxHeight - prot.minHeight)) + prot.minHeight;
-							//height = ((((float)radius) / mag) * (maxHeight - minHeight));// + minHeight;
 						}
 						if (prot.isProtrusion)
 							heights[i,j] *= height;
@@ -82,9 +82,7 @@ namespace AssemblyCSharp
 			int numProt = r.Next (minProt, maxProt);
 			int radius;
 			int x, y;
-			Vector2 center, dist;
-			float height = minHeight;
-			float mag;
+			Vector2 center;
 			for (int k = 0; k < numProt; k++) {
 				x = r.Next(minX, maxX);
 				y = r.Next(minX, maxX);
