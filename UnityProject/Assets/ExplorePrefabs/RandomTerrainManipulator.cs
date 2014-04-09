@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Linq;
+using AssemblyCSharp;
 
 public class RandomTerrainManipulator : MonoBehaviour {
 	private System.Random r;
 	private Terrain terr;
 	private TerrainData td;
+
+	private float startX, startY;
 
 	public bool isIsland = true;
 	public int minHeightAvg = 1;
@@ -414,7 +417,9 @@ public class RandomTerrainManipulator : MonoBehaviour {
 			}
 		}
 
-		if (islandChoice == 0) {
+		switch (islandChoice)
+		{
+		case 0:
 			int x, y;
 			Vector2 center, dist;
 			float height = minHeight;
@@ -445,21 +450,22 @@ public class RandomTerrainManipulator : MonoBehaviour {
 					
 				}
 			}
-		}
-
-		if (islandChoice == 1) {
+			break;
+		case 1:
 			maxHeight = minHeight + ((maxHeight - minHeight) / 2);
 			minProtrusions /= 2;
 			maxProtrusions /= 2;
 			minDipRadius /= 2;
 			maxDipRadius /= 2;
 			maxDipHeight = minDipHeight + ((maxDipHeight - minDipHeight) / 2);
+			break;
 		}
 
 		if (bisect) {
 			heights = bisectTerrain (heights, 0, 0, w, h, true, r.Next (minBisect, maxBisect));
 		} else if (circle) {
-			circleProtrusion(heights);
+			//circleProtrusion(heights);
+			TerrainProtrusions.createProtrusions((int)transform.position.x,(int)transform.position.y,w+(int)transform.position.x,h+(int)transform.position.y,minRadius,maxRadius,minHeight,maxHeight,minProtrusions,maxProtrusions,true);
 		}
 		else if (!bisect) {
 			for (int k = 0; k < numProtrusions; k++) {
@@ -482,7 +488,9 @@ public class RandomTerrainManipulator : MonoBehaviour {
 			}
 		}
 		
-		circleDips (heights);
+		TerrainProtrusions.createProtrusions((int)transform.position.x,(int)transform.position.y,w+(int)transform.position.x,h+(int)transform.position.y,minDipRadius,maxDipRadius,minDipHeight,maxDipHeight,minDips,maxDips,false);
+
+		TerrainProtrusions.modifyHeightMap (heights, (int)transform.position.x,(int)transform.position.y);
 
 		td.SetHeights (0, 0, heights);
 
